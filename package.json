@@ -7,7 +7,7 @@
   "description": "Base scaffold",
   "scripts": {
     "webstart": "node ./web/webserver.js",
-    "webbuild": "NODE_ENV=production webpack --verbose --display-error-details --progress --config ./config/prod.webpack.config.js"
+    "webbuild": "NODE_ENV=production webpack --display-error-details --progress --config ./config/webprod.webpack.config.js"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
