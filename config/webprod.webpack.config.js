@@ -1,5 +1,5 @@
-var path = require('path')
-var webpack = require('webpack')
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -95,22 +95,24 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.CommonsChunkPlugin('vendor'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor"
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
+    }),
     new webpack.DefinePlugin({
       "process.env": {
         NODE_ENV: JSON.stringify("production"),
         __DEVELOPMENT__: false
       }
     }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug:false
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
     })
   ] // end of plugins
 }
