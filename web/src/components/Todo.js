@@ -5,13 +5,20 @@ class Todo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      todos: [
+       todos: {
         // key is creation date
-        'Board the plane',
-        'Sleep',
-        'Try to finish coneference slides',
-       
-      ],
+        't1': {text: 'Board the plane'},
+        't2': {text: 'Sleep'},
+        't3': {text: 'Try to finish coneference slides'},
+        't4': {text: 'Eat cheese and drink wine'},
+        't5': {text: 'Go around in Uber'},
+        't6': {text: 'Talk with conf attendees'},
+        't7': {text: 'Show Demo 1'},
+        't8': {text: 'Show Demo 2'},
+        't9': {text: 'Lament about the state of animation'},
+        't10': {text: 'Show Secret Demo'},
+        't11': {text: 'Go home'},
+      },
       value: '',
        items: [{key: 'a', size: 10}, {key: 'b', size: 20}, {key: 'c', size: 30}],
     }
@@ -38,34 +45,44 @@ class Todo extends React.Component {
       data: this.state.todos[date],
     };
   }
-   getDefaultValue() {
-    const {todos} = this.state;
-    return Object.keys(todos)
-      .reduce((configs, date) => {
-        configs[date] = {
-          height: spring(0),
-          opacity: spring(1),
-          data: todos[date],
-        };
-        return configs;
-      }, {});
-  }
-  getEndValue() {
+  //   getDefaultValue() {
+  //   const {todos} = this.state;
+  //   return Object.keys(todos)
+  //     .reduce((configs, date) => {
+  //       configs[date] = {
+  //         height: spring(0),
+  //         opacity: spring(1),
+  //         data: todos[date],
+  //       };
+  //       return configs;
+  //     }, {});
+  // }
+
+   getEndValue() {
     const {todos, value} = this.state;
-    return Object.keys(todos)
+   let temp=Object.keys(todos)
       .filter(date => {
         const todo = todos[date];
         return todo.text.toUpperCase().indexOf(value.toUpperCase()) >= 0
       })
       .reduce((configs, date) => {
         configs[date] = {
-          height: spring(60, presets.wobbly),
-          opacity: spring(1, presets.wobbly),
+          // height: spring(60, presets.wobbly),
+          // opacity: spring(1, presets.wobbly),
+         styles: {width: spring(60), opacity: spring(1)},
           data: todos[date],
+          key:date
         };
         return configs;
       }, {});
+      console.log(temp)
+    return temp;
   }
+  // getTestVaule(){
+  //   let temp= 
+  //    console.log(temp);
+  //       return temp;
+  // }
   handleChange(event) {
     this.setState({value: event.target.value});
   }
@@ -109,10 +126,24 @@ handleSubmit(e) {
             <TransitionMotion
         willLeave={this.willLeave}
         willEnter={this.willEnter}
-       defaultStyles={this.getDefaultValue()}>
-         {interpolatedStyles =>
+       
+       styles={
+          Object.keys(this.state.todos)
+      .filter(date => {
+        const todo = todos[date];
+        return todo.text.toUpperCase().indexOf(value.toUpperCase()) >= 0
+      })
+      .reduce((configs, date) => {
+        configs[date] = {
+          height: spring(60, presets.wobbly),
+          opacity: spring(1, presets.wobbly),
+          data: todos[date],
+        }
+        })
+       }>
+         {configs =>
          <ul className="todo-list">
-            {
+            {/*{
               this.state.todos.map((text,index)=>{
                    return(
                     <li key={index}>
@@ -126,36 +157,20 @@ handleSubmit(e) {
                       </div>
                     </li>
                    )
-            })}
+            })}*/}
            </ul>
         }
-             {/*<ul className="todo-list">
-                 {
-                   this.state.todos.map((text,index)=>{
-                   return(
-                    <li key={index}>
-                         <div className="view">
-                        
-                        <label>{text}</label>
-                        <button
-                          className="destroy"
-                         onClick={this.handleDestroy.bind(null, index)}
-                        />
-                      </div>
-                    </li>
-                   )
-                 }
-                 )}
-                
-              </ul>*/}
+            
               </TransitionMotion>
         </section>
     <TransitionMotion
         willLeave={this.willLeave}
-        styles={this.state.items.map(item => ({
+        styles={
+         this.state.items.map(item => ({
           key: item.key,
           style: {width: item.size, height: item.size},
-        }))}>
+        }))
+        }>
         {interpolatedStyles =>
           // first render: a, b, c. Second: still a, b, c! Only last one's a, b.
           <div>
